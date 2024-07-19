@@ -1,0 +1,6 @@
+@SalesSupportTool_HostAddress = http://localhost:5147
+
+GET {{SalesSupportTool_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
