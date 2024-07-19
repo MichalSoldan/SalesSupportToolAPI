@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SalesSupportTool.Application.Api\SalesSupportTool.Application.Api.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Common\SalesSupportTool.Common.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Domain\SalesSupportTool.Domain.csproj" />
+    <ProjectReference Include="..\SalesSupportTool.Infrastructure.WebApi\SalesSupportTool.Infrastructure.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

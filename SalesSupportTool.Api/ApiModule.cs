@@ -1,4 +1,5 @@
 ﻿using SalesSupportTool.Common;
+using SalesSupportTool.Infrastructure.WebApi.Services;
 
 namespace SalesSupportTool.Api
 {
@@ -13,7 +14,7 @@ namespace SalesSupportTool.Api
         /// <inheritdoc />
         public void RegisterServices(IServiceCollection services)
         {
-            //services.AddScoped<SiteService>();
+            services.AddScoped<SalesSupportTool.Domain.Interfaces.IJwtAuthService, JwtAuthService>();
         }
 
         /// <inheritdoc />
