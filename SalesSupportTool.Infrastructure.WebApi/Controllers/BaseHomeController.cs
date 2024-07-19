@@ -40,6 +40,7 @@ namespace SalesSupportTool.Infrastructure.WebApi.Controllers
             {
                 content += $"{item.Key} : {item.Value}\n";
             }
+
             return content;
         }
 

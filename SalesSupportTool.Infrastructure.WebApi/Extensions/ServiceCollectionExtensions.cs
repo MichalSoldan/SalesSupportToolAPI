@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -19,7 +18,6 @@ using SalesSupportTool.Infrastructure.WebApi.Providers;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 
@@ -31,9 +29,7 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
 
         private const string ApiKeySchema = "ApiKey";
 
-        private const string OAuth2Schema = "OAuth2";
-
-        public static void AddHttpClient(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment, string configName = _defaultClientSettingsName)
+        public static void AddHttpClient(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment, string configName = _defaultClientSettingsName)
         {
             ServiceProvider serviceProvider = services.BuildServiceProvider();
             HttpClientOptions options = new HttpClientOptions();
@@ -113,8 +109,6 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
         {
             JwtAuthOptions jwtAuthOptions = new JwtAuthOptions();
             configuration.GetSection(JwtAuthOptions.SettingsName).Bind(jwtAuthOptions);
-            OAuth2Options oAuth2Options = new OAuth2Options();
-            configuration.GetSection(OAuth2Options.SettingsName).Bind(oAuth2Options);
 
             services.AddAuthentication(o =>
                 {
@@ -134,42 +128,8 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
                             ValidAudience = jwtAuthOptions.Audience,
                             IssuerSigningKey = JwtTokenHelper.CreateSigningKey(jwtAuthOptions.Secret)
                         };
-                })
-                .AddJwtBearer(OAuth2Schema, o =>
-                {
-                    o.Authority = $"{oAuth2Options.Instance}{oAuth2Options.TenantId}";
-                    o.Audience = $"api://{oAuth2Options.BackendAppId}";
-                    o.TokenValidationParameters =
-                        new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidIssuers = new string[] { $"https://sts.windows.net/{oAuth2Options.TenantId}/", $"{oAuth2Options.Instance}{oAuth2Options.TenantId}/" },
-                            ValidAudience = $"api://{oAuth2Options.BackendAppId}"
-                        };
-                    //o.RequireHttpsMetadata = false;
-                    //o.Events = new JwtBearerEvents();
-                    //o.Events.OnAuthenticationFailed = async (c) => { Console.WriteLine("test"); };
-                    //IdentityModelEventSource.ShowPII = true;
-                })
-                .AddPolicyScheme(JwtBearerDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme, o =>
-                {
-                    o.ForwardDefaultSelector = (context) =>
-                    {
-                        var jwtHandler = new JwtSecurityTokenHandler();
-                        string? token = context.Request.Headers[HeaderNames.Authorization].ToString().Split(' ').LastOrDefault();
-                        if (!string.IsNullOrEmpty(token) && jwtHandler.CanReadToken(token))
-                        {
-                            string tokenIssuer = jwtHandler.ReadJwtToken(token).Issuer;
-                            if (string.Equals(tokenIssuer, jwtAuthOptions.Issuer, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                return ApiKeySchema;
-                            }
-                        }
-                        return OAuth2Schema;
-                    };
                 });
+
             services.AddAuthorization(o =>
             {
                 if (!jwtAuthOptions.Enabled)
@@ -186,23 +146,6 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
 
             services.AddSwaggerGen(c =>
             {
-
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri($"{oAuth2Options.Instance}{oAuth2Options.TenantId}/oauth2/v2.0/authorize"),
-                            TokenUrl = new Uri($"{oAuth2Options.Instance}{oAuth2Options.TenantId}/oauth2/v2.0/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { oAuth2Options.Scope, "Access your API" }
-                            }
-                        }
-                    }
-                });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -211,23 +154,17 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "oauth2"
+                            Reference = new OpenApiReference 
+                            { 
+                                Type = ReferenceType.SecurityScheme, 
+                                Id = "Bearer" 
                             }
-                        },
-                        new[] { oAuth2Options.Scope }
-                    },
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
                         },
                         new List<string>()
                     }
