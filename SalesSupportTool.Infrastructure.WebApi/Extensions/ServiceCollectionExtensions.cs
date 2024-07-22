@@ -14,7 +14,6 @@ using Polly;
 
 using SalesSupportTool.Common.Models;
 using SalesSupportTool.Infrastructure.WebApi.Helpers;
-using SalesSupportTool.Infrastructure.WebApi.Providers;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -25,83 +24,54 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        private const string _defaultClientSettingsName = "DefaultClient";
-
+        private const string DefaultClientSettingsName = "DefaultClient";
         private const string ApiKeySchema = "ApiKey";
 
-        public static void AddHttpClient(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment, string configName = _defaultClientSettingsName)
+        public static void AddHttpClient(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment, string configName = DefaultClientSettingsName)
         {
             ServiceProvider serviceProvider = services.BuildServiceProvider();
             HttpClientOptions options = new HttpClientOptions();
             HttpClientOptions defaultOptions = new HttpClientOptions();
+
             configuration.GetSection(configName).Bind(options);
-            configuration.GetSection(_defaultClientSettingsName).Bind(defaultOptions);
+            configuration.GetSection(DefaultClientSettingsName).Bind(defaultOptions);
+
             IMapper mapper = serviceProvider.GetRequiredService<IMapper>();
             options = mapper.Map(defaultOptions, options);
 
-            if (options.UseAADToken != null && options.UseAADToken.Value)
-            {
-                IHttpClientBuilder httpClientBuilder = services.AddHttpClient(configName)
-                    .ConfigureHttpClient((sp, client) =>
-                    {
-                        var tokenProvider = sp.GetRequiredService<AADTokenProvider>();
-                        var token = tokenProvider.GetTokenAsync().GetAwaiter().GetResult();
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                        if (options.BaseAddress != null)
-                        {
-                            client.BaseAddress = options.BaseAddress;
-                        }
-                        if (options.Timeout != null)
-                        {
-                            client.Timeout = options.Timeout.Value;
-                        }
-                    }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)));
-                if (environment.IsDevelopment()) // disable SSL/TLS certificate validation.
+            IHttpClientBuilder httpClientBuilder = services
+                .AddHttpClient(configName)
+                .ConfigureHttpClient((serviceProvider, client) =>
                 {
-                    httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                    if (options.BaseAddress != null)
                     {
-                        HttpClientHandler handler = new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => true
-                        };
-                        return handler;
-                    });
-                }
-            }
-            else
+                        client.BaseAddress = options.BaseAddress;
+                    }
+                    if (options.Timeout != null)
+                    {
+                        client.Timeout = options.Timeout.Value;
+                    }
+                    if (options.ApiKey != null)
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
+                    }
+                    if (options.UserName != null)
+                    {
+                        client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.UserName, options.Password);
+                    }
+                })
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)));
+
+            if (environment.IsDevelopment())
             {
-                IHttpClientBuilder httpClientBuilder = services.AddHttpClient(configName)
-                    .ConfigureHttpClient((serviceProvider, client) =>
-                    {
-                        if (options.BaseAddress != null)
-                        {
-                            client.BaseAddress = options.BaseAddress;
-                        }
-                        if (options.Timeout != null)
-                        {
-                            client.Timeout = options.Timeout.Value;
-                        }
-                        if (options.ApiKey != null)
-                        {
-                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
-                        }
-                        if (options.UserName != null)
-                        {
-                            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.UserName, options.Password);
-                        }
-                    })
-                    .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)));
-                if (environment.IsDevelopment())
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
                 {
-                    httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                    HttpClientHandler handler = new HttpClientHandler
                     {
-                        HttpClientHandler handler = new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => true
-                        };
-                        return handler;
-                    });
-                }
+                        ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => true
+                    };
+                    return handler;
+                });
             }
         }
 
@@ -111,24 +81,23 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
             configuration.GetSection(JwtAuthOptions.SettingsName).Bind(jwtAuthOptions);
 
             services.AddAuthentication(o =>
+            {
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(ApiKeySchema, o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(ApiKeySchema, o =>
-                {
-                    o.TokenValidationParameters =
-                        new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = jwtAuthOptions.Issuer,
-                            ValidAudience = jwtAuthOptions.Audience,
-                            IssuerSigningKey = JwtTokenHelper.CreateSigningKey(jwtAuthOptions.Secret)
-                        };
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtAuthOptions.Issuer,
+                    ValidAudience = jwtAuthOptions.Audience,
+                    IssuerSigningKey = JwtTokenHelper.CreateSigningKey(jwtAuthOptions.Secret)
+                };
+            });
 
             services.AddAuthorization(o =>
             {
@@ -160,10 +129,10 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference 
-                            { 
-                                Type = ReferenceType.SecurityScheme, 
-                                Id = "Bearer" 
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             }
                         },
                         new List<string>()
@@ -188,15 +157,19 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
                 if (context.Type.IsEnum)
                 {
                     model.Enum.Clear();
+
                     foreach (string enumName in Enum.GetNames(context.Type))
                     {
                         System.Reflection.MemberInfo? memberInfo = context.Type.GetMember(enumName).FirstOrDefault(m => m.DeclaringType == context.Type);
+
                         EnumMemberAttribute? enumMemberAttribute = memberInfo == null
                          ? null
                          : memberInfo.GetCustomAttributes(typeof(EnumMemberAttribute), false).OfType<EnumMemberAttribute>().FirstOrDefault();
+
                         string label = enumMemberAttribute == null || string.IsNullOrWhiteSpace(enumMemberAttribute.Value)
                          ? enumName
                          : enumMemberAttribute.Value;
+
                         model.Enum.Add(new OpenApiString(label));
                     }
                 }

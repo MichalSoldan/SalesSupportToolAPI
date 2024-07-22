@@ -17,8 +17,8 @@ namespace SalesSupportTool.Api.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IJwtAuthService jwtAuthService, IOptions<JwtAuthOptions> jwtAuthOptions, IConfiguration configuration)
-            : base(jwtAuthService, jwtAuthOptions, configuration)
+        public HomeController(ILogger<HomeController> logger, IJwtAuthService jwtAuthService, IOptions<JwtAuthOptions> jwtAuthOptions)
+            : base(jwtAuthService, jwtAuthOptions)
         {
             this._logger = logger;
         }
