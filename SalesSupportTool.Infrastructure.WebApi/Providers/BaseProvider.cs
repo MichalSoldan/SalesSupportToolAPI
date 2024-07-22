@@ -1,22 +1,13 @@
-﻿using SalesSupportTool.Domain.Interfaces;
-
-using System.Text;
+﻿using System.Text;
 using System.Web;
 
-namespace SalesSupportTool.Infrastructure.ApolloIO
+namespace SalesSupportTool.Infrastructure.WebApi.Providers
 {
-    public class ApolloApiClient : IApolloApiClient
+    public abstract class BaseProvider
     {
-        private readonly HttpClient _apiClient;
-
-        public ApolloApiClient(IHttpClientFactory httpClientFactory)
-        {
-            _apiClient = httpClientFactory.CreateClient("ApolloIOClient");
-        }
-
         private Dictionary<string, string> DefaultHeaderParameters { get; set; } = [];
 
-        public async Task<HttpResponseMessage> CallApiAsync(
+        protected async Task<HttpResponseMessage> CallApiAsync(
             HttpClient httpClient,
             string path,
             HttpMethod method,
@@ -59,23 +50,6 @@ namespace SalesSupportTool.Infrastructure.ApolloIO
             }
 
             return await httpClient.SendAsync(request, cancellationToken);
-        }
-
-
-        public async Task<string> SearchCompanyAsync(string searchKey, int candidateMaximumQuantity = 10)
-        {
-            Dictionary<string, string> headerParams = new();
-            HttpResponseMessage response = await CallApiAsync(_apiClient, $"/mixed_companies/search", HttpMethod.Post, $"{{\"page\": 1, \"per_page\": 10, \"q_organization_name\": \"{searchKey}\", \"person_titles\": [\"ceo\", \"cto\"]}}", null, headerParams);
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
-        }
-
-        public async Task<string> SearchPeopleAsync(string searchKey, int candidateMaximumQuantity = 10)
-        {
-            Dictionary<string, string> headerParams = new();
-            HttpResponseMessage response = await CallApiAsync(_apiClient, $"/mixed_people/search", HttpMethod.Post, $"{{\"page\": 1, \"per_page\": 10, \"q_organization_name\": \"{searchKey}\", \"person_titles\": [\"ceo\", \"cto\"]}}", null, headerParams);
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
         }
     }
 }

@@ -10,6 +10,10 @@ namespace SalesSupportTool.Common.Models
     {
         public string ApiKey { get; set; }
 
+        public string ApiKeyHeaderName { get; set; }
+
+        public string Bearer { get; set; }
+
         public Uri BaseAddress { get; set; }
 
         public string Password { get; set; }
@@ -19,8 +23,5 @@ namespace SalesSupportTool.Common.Models
         public TimeSpan? Timeout { get; set; }
 
         public string UserName { get; set; }
-
-        public bool? UseAADToken { get; set; }
-
     }
 }

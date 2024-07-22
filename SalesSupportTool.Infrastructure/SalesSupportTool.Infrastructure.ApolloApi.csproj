@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Client\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
@@ -17,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SalesSupportTool.Domain\SalesSupportTool.Domain.csproj" />
+    <ProjectReference Include="..\SalesSupportTool.Infrastructure.WebApi\SalesSupportTool.Infrastructure.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

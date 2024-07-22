@@ -18,6 +18,7 @@ using SalesSupportTool.Infrastructure.WebApi.Helpers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Runtime.Serialization;
 
 namespace SalesSupportTool.Infrastructure.WebApi.Extensions
@@ -47,32 +48,125 @@ namespace SalesSupportTool.Infrastructure.WebApi.Extensions
                     {
                         client.BaseAddress = options.BaseAddress;
                     }
+                    
                     if (options.Timeout != null)
                     {
                         client.Timeout = options.Timeout.Value;
                     }
+                    
                     if (options.ApiKey != null)
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
+                        string apiKeyHeaderName = "ApiKey";
+
+                        if (!string.IsNullOrWhiteSpace(options.ApiKeyHeaderName))
+                        {
+                            apiKeyHeaderName = options.ApiKeyHeaderName;
+                        }
+                        client.DefaultRequestHeaders.Add(apiKeyHeaderName, options.ApiKey);
                     }
+
+                    if (options.Bearer != null)
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.Bearer);
+                    }
+
                     if (options.UserName != null)
                     {
                         client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.UserName, options.Password);
                     }
                 })
-                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)));
-
-            if (environment.IsDevelopment())
-            {
-                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)))
+                .ConfigurePrimaryHttpMessageHandler(() =>
                 {
-                    HttpClientHandler handler = new HttpClientHandler
+                    SocketsHttpHandler handler = new SocketsHttpHandler
                     {
-                        ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => true
+                        SslOptions =
+                        {
+                            RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+                            {
+                                if(environment.IsDevelopment())
+                                {
+                                    return true;
+                                }
+
+                                return sslPolicyErrors == SslPolicyErrors.None;
+                            }
+                        }
                     };
+
                     return handler;
                 });
-            }
+        }
+
+        public static void AddHttpClient<T>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment) where T : class
+        {
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+            HttpClientOptions options = new HttpClientOptions();
+            HttpClientOptions defaultOptions = new HttpClientOptions();
+
+            configuration.GetSection(typeof(T)?.Name ?? DefaultClientSettingsName).Bind(options);
+
+            IMapper mapper = serviceProvider.GetRequiredService<IMapper>();
+            options = mapper.Map(defaultOptions, options);
+
+            IHttpClientBuilder httpClientBuilder = services
+                .AddHttpClient<T>()
+                .ConfigureHttpClient((serviceProvider, client) =>
+                {
+                    if (options.BaseAddress != null)
+                    {
+                        client.BaseAddress = options.BaseAddress;
+                    }
+
+                    if (options.Timeout != null)
+                    {
+                        client.Timeout = options.Timeout.Value;
+                    }
+
+                    if (options.ApiKey != null)
+                    {
+                        string apiKeyHeaderName = "ApiKey";
+
+                        if (!string.IsNullOrWhiteSpace(options.ApiKeyHeaderName))
+                        {
+                            apiKeyHeaderName = options.ApiKeyHeaderName;
+                        }
+                        client.DefaultRequestHeaders.Add(apiKeyHeaderName, options.ApiKey);
+                    }
+
+                    if(options.Bearer != null)
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.Bearer);
+                    }
+
+                    if (options.UserName != null)
+                    {
+                        client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.UserName, options.Password);
+                    }
+                })
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(options.RetryCount ?? 0, retry => TimeSpan.FromSeconds(1)))
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    SocketsHttpHandler handler = new SocketsHttpHandler
+                    {
+                        PooledConnectionLifetime = TimeSpan.FromMinutes(3),
+                        SslOptions =
+                        {
+                            RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+                            {
+                                if(environment.IsDevelopment())
+                                {
+                                    return true;
+                                }
+
+                                return sslPolicyErrors == SslPolicyErrors.None;
+                            }
+                        }
+                    };
+
+                    return handler;
+                })
+                .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
         }
 
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

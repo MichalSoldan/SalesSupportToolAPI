@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Api", "Sal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Domain", "SalesSupportTool.Domain\SalesSupportTool.Domain.csproj", "{3849C5A9-700D-4E2C-B62C-4BC688616A2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Infrastructure.ApolloIO", "SalesSupportTool.Infrastructure\SalesSupportTool.Infrastructure.ApolloIO.csproj", "{20794DB5-8F37-48ED-BD2A-9A893672BAA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Infrastructure.ApolloApi", "SalesSupportTool.Infrastructure\SalesSupportTool.Infrastructure.ApolloApi.csproj", "{20794DB5-8F37-48ED-BD2A-9A893672BAA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Common", "SalesSupportTool.Common\SalesSupportTool.Common.csproj", "{3550D1E1-6824-4864-93C1-85E1EEF41282}"
 EndProject
