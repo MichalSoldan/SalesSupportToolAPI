@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SalesSupportTool.Domain.Models.ApolloApi;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,8 @@ namespace SalesSupportTool.Domain.Interfaces
 {
     public interface IApolloApiService
     {
-        Task<string> SearchCompanyAsync(string searchKey);
-        Task<string> SearchPeopleAsync(string searchKey);
+        Task<CompanyResponse> SearchCompanyAsync(string searchKey);
+        Task<PeopleResponse> SearchPeopleAsync(string searchKey);
 
     }
 }

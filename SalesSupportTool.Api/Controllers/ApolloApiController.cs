@@ -16,7 +16,7 @@ namespace SalesSupportTool.Api.Controllers
         [HttpGet("SearchCompanies")]
         public async Task<object> SearchCompanies(string searchText)
         {
-            string data = await _apolloApiService.SearchCompanyAsync(searchText);
+            var data = await _apolloApiService.SearchCompanyAsync(searchText);
 
             return data;
         }
@@ -24,7 +24,7 @@ namespace SalesSupportTool.Api.Controllers
         [HttpGet("SearchPeople")]
         public async Task<object> SearchPeople(string searchText)
         {
-            string data = await _apolloApiService.SearchPeopleAsync(searchText);
+            var data = await _apolloApiService.SearchPeopleAsync(searchText);
 
             return data;
         }

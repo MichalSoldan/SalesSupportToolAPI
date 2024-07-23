@@ -1,4 +1,5 @@
 ﻿using SalesSupportTool.Domain.Interfaces;
+using SalesSupportTool.Domain.Models.ApolloApi;
 
 namespace SalesSupportTool.Domain.Services
 {
@@ -6,12 +7,12 @@ namespace SalesSupportTool.Domain.Services
     {
         private readonly IApolloApiProvider _apolloApiProvider = apolloApiProvider;
 
-        public async Task<string> SearchCompanyAsync(string searchKey)
+        public async Task<CompanyResponse> SearchCompanyAsync(string searchKey)
         {
             return await _apolloApiProvider.SearchCompanyAsync(searchKey);
         }
 
-        public async Task<string> SearchPeopleAsync(string searchKey)
+        public async Task<PeopleResponse> SearchPeopleAsync(string searchKey)
         {
             return await _apolloApiProvider.SearchPeopleAsync(searchKey);
         }
