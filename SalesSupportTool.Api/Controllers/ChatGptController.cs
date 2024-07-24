@@ -14,7 +14,7 @@ namespace SalesSupportTool.Api.Controllers
         private readonly ILogger<ApolloApiController> _logger = logger;
 
 
-        [HttpGet("Completions")]
+        [HttpPost("Completions")]
         public async Task<CompletionsResponse> Completions(string prompt, string model = "gpt-4-turbo")
         {
             var data = await _chatGptApiService.Completion(prompt, model);

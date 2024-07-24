@@ -73,7 +73,9 @@ namespace SalesSupportTool.Infrastructure.ApolloApi
                 this.CreateMap<Account, DomainApollo.Account>();
                 this.CreateMap<Breadcrumb, DomainApollo.Breadcrumb>();
                 this.CreateMap<EmploymentHistory, DomainApollo.EmploymentHistory>();
-                this.CreateMap<Organization, DomainApollo.Organization>();
+                this.CreateMap<OrganizationBase, DomainApollo.OrganizationBase>();
+                this.CreateMap<Organization, DomainApollo.Organization>()
+                    .IncludeBase<OrganizationBase, DomainApollo.OrganizationBase>();
                 this.CreateMap<Person, DomainApollo.Person>();
                 this.CreateMap<Phone, DomainApollo.Phone>();
                 this.CreateMap<DetailedPhoneNumber, DomainApollo.DetailedPhoneNumber>();
