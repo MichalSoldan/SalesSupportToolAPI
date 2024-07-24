@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 
 using SalesSupportTool.Api;
+using SalesSupportTool.Api.Controllers;
 using SalesSupportTool.Common;
 using SalesSupportTool.Common.Models;
 using SalesSupportTool.Domain;
@@ -54,7 +55,8 @@ namespace SalesSupportTool
             {
                 new ApiModule(),
                 new DomainModule(),
-                new ApolloApiModule()
+                new ApolloApiModule(),
+                new ChatGptApiModule(),
             };
 
             Array.ForEach(modules, m => m.RegisterServices(services, configuration, environment));

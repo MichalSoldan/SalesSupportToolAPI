@@ -12,6 +12,5 @@ namespace SalesSupportTool.Domain.Interfaces
     {
         Task<CompanyResponse> SearchCompanyAsync(string searchKey);
         Task<PeopleResponse> SearchPeopleAsync(string searchKey);
-
     }
 }

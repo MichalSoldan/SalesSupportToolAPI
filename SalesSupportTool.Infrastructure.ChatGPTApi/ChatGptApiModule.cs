@@ -4,16 +4,18 @@ using Microsoft.Extensions.Hosting;
 
 using SalesSupportTool.Common;
 using SalesSupportTool.Domain.Interfaces;
-using SalesSupportTool.Domain.Services;
+using SalesSupportTool.Infrastructure.ChatGPTApi;
+using SalesSupportTool.Infrastructure.WebApi.Extensions;
 
 namespace SalesSupportTool.Domain
 {
-    public class DomainModule : IApplicationModule
+    public class ChatGptApiModule : IApplicationModule
     {
         public void RegisterServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.AddScoped<IApolloApiService, ApolloApiService>();
-            services.AddScoped<IChatGptApiService, ChatGptApiService>();
+            services.AddHttpClient(configuration, environment, ChatGptApiProvider.CLIENT_NAME);
+
+            services.AddScoped<IChatGptApiProvider, ChatGptApiProvider>();
         }
 
         public void StartServices(IServiceProvider provider)
