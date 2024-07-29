@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{364490
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Infrastructure.WebApi", "SalesSupportTool.Infrastructure.WebApi\SalesSupportTool.Infrastructure.WebApi.csproj", "{D86F8DA1-0ECB-4095-BECD-AFC3D9A50F02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSupportTool.Infrastructure.ChatGPTApi", "SalesSupportTool.Infrastructure.ChatGPTApi\SalesSupportTool.Infrastructure.ChatGPTApi.csproj", "{87939E15-1BBB-4FEA-A667-D5B2EAE23A19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesSupportTool.Infrastructure.ChatGPTApi", "SalesSupportTool.Infrastructure.ChatGPTApi\SalesSupportTool.Infrastructure.ChatGPTApi.csproj", "{87939E15-1BBB-4FEA-A667-D5B2EAE23A19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSupportTool.Infrastructure.BuiltWithApi", "SalesSupportTool.Infrastructure.BuiltWithApi\SalesSupportTool.Infrastructure.BuiltWithApi.csproj", "{22EBA17E-7C4E-4A69-957C-7A83966372E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{87939E15-1BBB-4FEA-A667-D5B2EAE23A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87939E15-1BBB-4FEA-A667-D5B2EAE23A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87939E15-1BBB-4FEA-A667-D5B2EAE23A19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22EBA17E-7C4E-4A69-957C-7A83966372E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22EBA17E-7C4E-4A69-957C-7A83966372E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22EBA17E-7C4E-4A69-957C-7A83966372E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22EBA17E-7C4E-4A69-957C-7A83966372E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{3550D1E1-6824-4864-93C1-85E1EEF41282} = {36449080-1A36-456A-A699-196AE10EEDDC}
 		{D86F8DA1-0ECB-4095-BECD-AFC3D9A50F02} = {0392EECD-D88B-4A0C-98AD-65D000509278}
 		{87939E15-1BBB-4FEA-A667-D5B2EAE23A19} = {0392EECD-D88B-4A0C-98AD-65D000509278}
+		{22EBA17E-7C4E-4A69-957C-7A83966372E7} = {0392EECD-D88B-4A0C-98AD-65D000509278}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A9B69ABD-DA65-4475-ABFF-B701F45A0780}

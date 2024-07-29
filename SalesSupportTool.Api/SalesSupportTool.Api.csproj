@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SalesSupportTool.Common\SalesSupportTool.Common.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Domain\SalesSupportTool.Domain.csproj" />
+    <ProjectReference Include="..\SalesSupportTool.Infrastructure.BuiltWithApi\SalesSupportTool.Infrastructure.BuiltWithApi.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Infrastructure.ChatGPTApi\SalesSupportTool.Infrastructure.ChatGPTApi.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Infrastructure.WebApi\SalesSupportTool.Infrastructure.WebApi.csproj" />
     <ProjectReference Include="..\SalesSupportTool.Infrastructure\SalesSupportTool.Infrastructure.ApolloApi.csproj" />

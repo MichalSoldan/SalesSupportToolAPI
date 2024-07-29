@@ -8,6 +8,7 @@ using SalesSupportTool.Api.Controllers;
 using SalesSupportTool.Common;
 using SalesSupportTool.Common.Models;
 using SalesSupportTool.Domain;
+using SalesSupportTool.Infrastructure.BuiltWithApi;
 using SalesSupportTool.Infrastructure.WebApi.Middlewares;
 
 namespace SalesSupportTool
@@ -57,6 +58,7 @@ namespace SalesSupportTool
                 new DomainModule(),
                 new ApolloApiModule(),
                 new ChatGptApiModule(),
+                new BuiltWithApiModule(),
             };
 
             Array.ForEach(modules, m => m.RegisterServices(services, configuration, environment));

@@ -12,6 +12,8 @@ namespace SalesSupportTool.Common.Models
 
         public string ApiKeyHeaderName { get; set; }
 
+        public string ApiKeyParamName { get; set; }
+
         public string Bearer { get; set; }
 
         public Uri BaseAddress { get; set; }
