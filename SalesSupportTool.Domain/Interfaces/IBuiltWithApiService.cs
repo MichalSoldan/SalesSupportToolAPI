@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SalesSupportTool.Domain.Models.BuiltWithApi;
 
 namespace SalesSupportTool.Domain.Interfaces
 {
     public interface IBuiltWithApiService
     {
-        Task<object> GetDomain(string domain);
+        Task<DomainResponse> GetDomain(string domain);
     }
 }

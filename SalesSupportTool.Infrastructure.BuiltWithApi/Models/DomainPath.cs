@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesSupportTool.Infrastructure.BuiltWithApi.Models
-{    public class Path
+{    public class DomainPath
     {
         public List<Technology> Technologies { get; set; }
         public long FirstIndexed { get; set; }

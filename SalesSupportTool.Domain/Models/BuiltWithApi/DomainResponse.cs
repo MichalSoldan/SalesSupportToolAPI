@@ -1,6 +1,6 @@
-﻿namespace SalesSupportTool.Infrastructure.BuiltWithApi.Models
+﻿namespace SalesSupportTool.Domain.Models.BuiltWithApi
 {
-    public class Response
+    public class DomainResponse
     {
         public List<DomainResult> Results { get; set; }
         public List<Error> Errors { get; set; }
