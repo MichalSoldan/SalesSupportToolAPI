@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Graph.Models;
 
 using SalesSupportTool.Domain.Interfaces;
 using SalesSupportTool.Infrastructure.BuiltWithApi.Models;
 using SalesSupportTool.Infrastructure.WebApi.Providers;
+
+using System;
+using System.Runtime.CompilerServices;
 
 using DomainBuiltWith = SalesSupportTool.Domain.Models.BuiltWithApi;
 
@@ -28,15 +32,16 @@ namespace SalesSupportTool.Infrastructure.BuiltWithApi
             _httpClient = httpClientFactory.CreateClient(CLIENT_NAME);
         }
 
-        public async Task<DomainBuiltWith.DomainResponse> GetDomain(string domain)
+        public async Task<DomainBuiltWith.DomainResponse> GetDomain(string domain, bool liveOnly = true)
         {
             var utlParams = new Dictionary<string, string>
             {
                 { "KEY", _key },
-                { "LOOKUP", domain }
+                { "LOOKUP", domain },
+                { "LIVEONLY", liveOnly ? "yes" : "no" },
             };
 
-            HttpResponseMessage response = await CallApiAsync(_httpClient, "/api.json", HttpMethod.Get, null, utlParams, null);
+            HttpResponseMessage response = await CallApiAsync(_httpClient, "/v21/api.json", HttpMethod.Get, null, utlParams, null);
 
             response.EnsureSuccessStatusCode();
 
@@ -45,6 +50,29 @@ namespace SalesSupportTool.Infrastructure.BuiltWithApi
             var data = System.Text.Json.JsonSerializer.Deserialize<Response>(content);
 
             var mappedData = _mapper.Map<DomainBuiltWith.DomainResponse>(data);
+
+            return mappedData;
+        }
+
+        public async Task<List<DomainBuiltWith.SimpleDomainInfo>> GetDomainSimple(string domain)
+        {
+            //https://api.builtwith.com/daltv1/api.json?KEY=20399e69-7e00-4944-9117-1d54489aa624&LOOKUP=stork.com
+
+            var utlParams = new Dictionary<string, string>
+            {
+                { "KEY", _key },
+                { "LOOKUP", domain },
+            };
+
+            HttpResponseMessage response = await CallApiAsync(_httpClient, "/daltv1/api.json", HttpMethod.Get, null, utlParams, null);
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var data = System.Text.Json.JsonSerializer.Deserialize<List<SimpleDomainInfo>>(content);
+
+            var mappedData = _mapper.Map<List<DomainBuiltWith.SimpleDomainInfo>>(data);
 
             return mappedData;
         }
@@ -87,6 +115,8 @@ namespace SalesSupportTool.Infrastructure.BuiltWithApi
                     .ForMember(d => d.LastDetected, o => o.MapFrom(s => DateTimeOffset.FromUnixTimeMilliseconds(s.LastDetected).DateTime))
                     .ForMember(d => d.IsPremium, o => o.MapFrom(s => s.IsPremium.Equals("yes", StringComparison.OrdinalIgnoreCase)))
                     ;
+
+                this.CreateMap<SimpleDomainInfo, DomainBuiltWith.SimpleDomainInfo>();
 
             }
         }

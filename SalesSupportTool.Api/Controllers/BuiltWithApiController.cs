@@ -22,5 +22,13 @@ namespace SalesSupportTool.Api.Controllers
 
             //return mappedData;
         }
+
+        [HttpGet("GetDomainSimple")]
+        public async Task<object> GetDomainSimple(string domain)
+        {
+            var data = await _builtWithApiService.GetDomainSimple(domain);
+
+            return data;
+        }
     }
 }
