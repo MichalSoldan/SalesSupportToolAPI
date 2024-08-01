@@ -10,7 +10,7 @@ namespace SalesSupportTool.Domain.Models.ApolloApi
     {
         public string _id { get; set; }
         public object created_at { get; set; }
-        public bool current { get; set; }
+        public bool? current { get; set; }
         public object degree { get; set; }
         public object description { get; set; }
         public object emails { get; set; }

@@ -18,7 +18,7 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public string raw_number { get; set; }
         public string sanitized_number { get; set; }
         public string type { get; set; }
-        public int position { get; set; }
+        public int? position { get; set; }
         public string status { get; set; }
         public object dnc_status { get; set; }
         public object dnc_other_info { get; set; }

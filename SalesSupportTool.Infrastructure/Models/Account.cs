@@ -18,10 +18,10 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public string facebook_url { get; set; }
         public Phone primary_phone { get; set; }
         public List<string> languages { get; set; }
-        public int alexa_ranking { get; set; }
+        public int? alexa_ranking { get; set; }
         public string phone { get; set; }
         public string linkedin_uid { get; set; }
-        public int founded_year { get; set; }
+        public int? founded_year { get; set; }
         public object publicly_traded_symbol { get; set; }
         public object publicly_traded_exchange { get; set; }
         public string logo_url { get; set; }
@@ -36,7 +36,7 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public string organization_state { get; set; }
         public string organization_country { get; set; }
         public string organization_postal_code { get; set; }
-        public bool suggest_location_enrichment { get; set; }
+        public bool? suggest_location_enrichment { get; set; }
         public string domain { get; set; }
         public string team_id { get; set; }
         public string organization_id { get; set; }
@@ -61,11 +61,11 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public object crm_record_url { get; set; }
         public List<object> contact_emailer_campaign_ids { get; set; }
         public object contact_campaign_status_tally { get; set; }
-        public int num_contacts { get; set; }
+        public int? num_contacts { get; set; }
         public object last_activity_date { get; set; }
         public object intent_strength { get; set; }
-        public bool show_intent { get; set; }
-        public bool has_intent_signal_account { get; set; }
+        public bool? show_intent { get; set; }
+        public bool? has_intent_signal_account { get; set; }
         public object intent_signal_account { get; set; }
     }
 }

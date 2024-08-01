@@ -18,7 +18,7 @@ namespace SalesSupportTool.Domain.Models.ApolloApi
         public string Raw_number { get; set; }
         public string Sanitized_number { get; set; }
         public string Type { get; set; }
-        public int Position { get; set; }
+        public int? Position { get; set; }
         public string Status { get; set; }
         public object Dnc_status { get; set; }
         public object Dnc_other_info { get; set; }

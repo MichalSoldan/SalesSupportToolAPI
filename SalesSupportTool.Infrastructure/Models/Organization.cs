@@ -33,8 +33,8 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public string primary_domain { get; set; }
         public object owned_by_organization_id { get; set; }
         public object intent_strength { get; set; }
-        public bool show_intent { get; set; }
-        public bool has_intent_signal_account { get; set; }
+        public bool? show_intent { get; set; }
+        public bool? has_intent_signal_account { get; set; }
         public object intent_signal_account { get; set; }
         public string sanitized_phone { get; set; }
     }

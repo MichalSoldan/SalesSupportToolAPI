@@ -28,7 +28,7 @@ namespace SalesSupportTool.Domain.Models.ApolloApi
         public string city { get; set; }
         public string country { get; set; }
         public Organization organization { get; set; }
-        public bool is_likely_to_engage { get; set; }
+        public bool? is_likely_to_engage { get; set; }
         public string account_id { get; set; }
         public Account account { get; set; }
         public List<string> departments { get; set; }
@@ -37,7 +37,7 @@ namespace SalesSupportTool.Domain.Models.ApolloApi
         public List<object> functions { get; set; }
         public List<DetailedPhoneNumber> phone_numbers { get; set; }
         public object intent_strength { get; set; }
-        public bool show_intent { get; set; }
-        public bool revealed_for_current_team { get; set; }
+        public bool? show_intent { get; set; }
+        public bool? revealed_for_current_team { get; set; }
     }
 }
