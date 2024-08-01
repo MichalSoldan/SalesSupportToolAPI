@@ -56,11 +56,24 @@ namespace SalesSupportTool.Api.Controllers
                     ;
 
                 this.CreateMap<DomainApollo.Account, Account>()
-                    .ForMember(d => d.Name, o => o.MapFrom((s, d, i, c) => { return s.name; }))
-                    .ForMember(d => d.FullAddress, o => o.MapFrom((s, d, i, c) => { return $"{s.organization_street_address}, {s.organization_city}, {s.organization_postal_code}, {s.organization_state},  {s.organization_country}"; }))
-                    .ForMember(d => d.Website, o => o.MapFrom(s => s.website_url))
+                    .ForMember(d => d.AccountStageId, o => o.MapFrom(s => s.account_stage_id))
+                    .ForMember(d => d.City, o => o.MapFrom(s => s.organization_city))
+                    .ForMember(d => d.Country, o => o.MapFrom(s => s.organization_country))
                     .ForMember(d => d.Domain, o => o.MapFrom(s => s.domain))
+                    .ForMember(d => d.FullAddress, o => o.MapFrom((s, d, i, c) => { return $"{s.organization_street_address}, {s.organization_city}, {s.organization_postal_code}, {s.organization_state},  {s.organization_country}"; }))
+                    .ForMember(d => d.LastActivityDate, o => o.MapFrom((s, d, i, c) => 
+                    {
+                        DateTime? dt = string.IsNullOrWhiteSpace(s.last_activity_date) ? null : DateTime.Parse(s.last_activity_date);
+                        return dt; 
+                    }))
+                    .ForMember(d => d.LinkedInUrl, o => o.MapFrom(s => s.linkedin_url))
+                    .ForMember(d => d.Name, o => o.MapFrom((s, d, i, c) => { return s.name; }))
+                    .ForMember(d => d.OwnedByOrganizationName, o => o.MapFrom((s, d, i, c) => { return s.owned_by_organization?.name ?? string.Empty; }))
+                    .ForMember(d => d.OwnedByOrganizationWebsiteUrl, o => o.MapFrom((s, d, i, c) => { return s.owned_by_organization?.website_url ?? string.Empty; }))
                     .ForMember(d => d.PhoneNumber, o => o.MapFrom((s, d, i, c) => { return s.primary_phone?.Sanitized_number ?? string.Empty; }))
+                    .ForMember(d => d.PhoneStatus, o => o.MapFrom(s => s.phone_status))
+                    .ForMember(d => d.TwitterUrl, o => o.MapFrom(s => s.twitter_url))
+                    .ForMember(d => d.WebsiteUrl, o => o.MapFrom(s => s.website_url))
                     ;
 
                 this.CreateMap<DomainApollo.OrganizationBase, OrganizationBase>()

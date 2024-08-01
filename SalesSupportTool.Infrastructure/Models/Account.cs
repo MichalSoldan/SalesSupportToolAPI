@@ -62,7 +62,7 @@ namespace SalesSupportTool.Infrastructure.ApolloApi.Models
         public List<object> contact_emailer_campaign_ids { get; set; }
         public object contact_campaign_status_tally { get; set; }
         public int? num_contacts { get; set; }
-        public object last_activity_date { get; set; }
+        public string? last_activity_date { get; set; }
         public object intent_strength { get; set; }
         public bool? show_intent { get; set; }
         public bool? has_intent_signal_account { get; set; }
