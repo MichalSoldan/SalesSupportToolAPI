@@ -17,10 +17,5 @@ namespace SalesSupportTool.Domain
 
             services.AddScoped<IChatGptApiProvider, ChatGptApiProvider>();
         }
-
-        public void StartServices(IServiceProvider provider)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

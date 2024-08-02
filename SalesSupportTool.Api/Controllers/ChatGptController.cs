@@ -15,9 +15,16 @@ namespace SalesSupportTool.Api.Controllers
 
 
         [HttpPost("Completions")]
-        public async Task<CompletionsResponse> Completions(string prompt, string model = "gpt-4-turbo")
+        public async Task<CompletionsResponse> Completions(string prompt, string model = "gpt-4o")
         {
             var data = await _chatGptApiService.Completion(prompt, model);
+
+            return data;
+        }
+        [HttpPost("CompanyReview")]
+        public async Task<object> CompanyReview(string companyName, string model = "gpt-4o")
+        {
+            var data = await _chatGptApiService.CompanyReview(companyName, model);
 
             return data;
         }

@@ -16,10 +16,5 @@ namespace SalesSupportTool.Domain
             services.AddScoped<IChatGptApiService, ChatGptApiService>();
             services.AddScoped<IBuiltWithApiService, BuiltWithApiService>();
         }
-
-        public void StartServices(IServiceProvider provider)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

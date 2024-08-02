@@ -17,10 +17,5 @@ namespace SalesSupportTool.Domain
 
             services.AddScoped<IApolloApiProvider, ApolloApiProvider>();
         }
-
-        public void StartServices(IServiceProvider provider)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

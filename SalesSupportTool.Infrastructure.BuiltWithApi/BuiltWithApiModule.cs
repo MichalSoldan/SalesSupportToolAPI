@@ -16,10 +16,5 @@ namespace SalesSupportTool.Infrastructure.BuiltWithApi
 
             services.AddScoped<IBuiltWithApiProvider, BuiltWithApiProvider>();
         }
-
-        public void StartServices(IServiceProvider provider)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

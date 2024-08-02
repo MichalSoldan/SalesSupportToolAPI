@@ -7,7 +7,12 @@ namespace SalesSupportTool.Domain.Services
     {
         private readonly IChatGptApiProvider _chatGptApiProvider = chatGptApiProvider;
 
-        public Task<CompletionsResponse> Completion(string prompt, string model = "gpt-4-turbo")
+        public Task<object> CompanyReview(string companyName, string model = "gpt-4o")
+        {
+            return chatGptApiProvider.CompanyReview(companyName, model);
+        }
+
+        public Task<CompletionsResponse> Completion(string prompt, string model = "gpt-4o")
         {
             return chatGptApiProvider.Completions(prompt, model);
         }

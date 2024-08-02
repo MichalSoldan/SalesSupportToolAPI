@@ -13,10 +13,5 @@ namespace SalesSupportTool.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
-
-        public void StartServices(IServiceProvider provider)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

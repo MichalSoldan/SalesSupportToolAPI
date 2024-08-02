@@ -17,11 +17,5 @@ namespace SalesSupportTool.Common
         /// </summary>
         /// <param name="services">The service collection.</param>
         void RegisterServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment);
-
-        /// <summary>
-        /// Starts the services.
-        /// </summary>
-        /// <param name="provider">The provider.</param>
-        void StartServices(IServiceProvider provider);
     }
 }
